@@ -6,7 +6,8 @@ import { AnimatePresence, motion } from "framer-motion";
 
 const BANNERS = [
   { src: "/marca/capa.jpg", alt: "R&R Confecções — Moda Baby e Infantil — Varejo e Atacado" },
-  { src: "/marca/capa2.jpg", alt: "R&R Confecções — Moda Praia — Ofertas imperdíveis" },
+  { src: "/marca/capa3.jpg", alt: "R&R Confecções — Moda Baby e Infantil" },
+  { src: "/marca/capa4.jpg", alt: "R&R Confecções — Moda Baby e Infantil" },
 ];
 
 const INTERVALO_MS = 4500;
