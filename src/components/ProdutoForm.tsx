@@ -142,8 +142,8 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
           <input
             type="number"
             step="0.01"
-            value={dados.precoVarejo}
-            onChange={(e) => setDados((d) => ({ ...d, precoVarejo: Number(e.target.value) }))}
+            value={dados.precoVarejo || ""}
+            onChange={(e) => setDados((d) => ({ ...d, precoVarejo: e.target.value === "" ? 0 : Number(e.target.value) }))}
             className="w-full rounded-xl border-2 border-foreground/15 px-4 py-2 text-sm outline-none focus:border-brand-pink"
           />
         </div>
@@ -173,12 +173,12 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
               <input
                 type="number"
                 step="0.01"
-                value={dados.promocao?.precoDe ?? ""}
+                value={dados.promocao?.precoDe || ""}
                 onChange={(e) =>
                   setDados((d) => ({
                     ...d,
                     promocao: {
-                      precoDe: Number(e.target.value),
+                      precoDe: e.target.value === "" ? 0 : Number(e.target.value),
                       precoPor: d.promocao?.precoPor ?? 0,
                     },
                   }))
@@ -193,13 +193,13 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
               <input
                 type="number"
                 step="0.01"
-                value={dados.promocao?.precoPor ?? ""}
+                value={dados.promocao?.precoPor || ""}
                 onChange={(e) =>
                   setDados((d) => ({
                     ...d,
                     promocao: {
                       precoDe: d.promocao?.precoDe ?? 0,
-                      precoPor: Number(e.target.value),
+                      precoPor: e.target.value === "" ? 0 : Number(e.target.value),
                     },
                   }))
                 }
