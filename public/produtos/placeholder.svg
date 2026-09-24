@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#FDF3FA"/>
+  <circle cx="200" cy="150" r="70" fill="#FFF200"/>
+  <circle cx="170" cy="135" r="8" fill="#1A1A1A"/>
+  <circle cx="230" cy="135" r="8" fill="#1A1A1A"/>
+  <path d="M170 175 Q200 200 230 175" stroke="#1A1A1A" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <rect x="120" y="230" width="160" height="120" rx="24" fill="#EF0091"/>
+  <rect x="140" y="250" width="120" height="80" rx="12" fill="#00A1D7"/>
+  <text x="200" y="385" font-family="Arial, sans-serif" font-size="16" fill="#B6036B" text-anchor="middle">
+    Foto do produto (adicione no painel)
+  </text>
+</svg>

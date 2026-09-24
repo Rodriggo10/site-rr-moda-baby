@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fdf9f6;
+  --foreground: #26203a;
+
+  --brand-pink: #ef0091;
+  --brand-pink-dark: #b6036b;
+  --brand-blue: #00a1d7;
+  --brand-blue-dark: #037ab2;
+  --brand-yellow: #fff200;
+  --brand-green: #78c052;
+  --brand-orange: #f47856;
+
+  --brand-pink-pastel: #f5add9;
+  --brand-blue-pastel: #a3ddf0;
+  --brand-yellow-pastel: #fbe388;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand-pink: var(--brand-pink);
+  --color-brand-pink-dark: var(--brand-pink-dark);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-blue-dark: var(--brand-blue-dark);
+  --color-brand-yellow: var(--brand-yellow);
+  --color-brand-green: var(--brand-green);
+  --color-brand-orange: var(--brand-orange);
+  --font-sans: var(--font-baloo);
+}
+
+body {
+  background: var(--background);
+  background-image:
+    radial-gradient(ellipse 950px 650px at 8% 0%, var(--brand-pink-pastel) 0%, transparent 68%),
+    radial-gradient(ellipse 950px 750px at 95% 15%, var(--brand-blue-pastel) 0%, transparent 63%),
+    radial-gradient(ellipse 1050px 850px at 50% 100%, var(--brand-yellow-pastel) 0%, transparent 68%);
+  background-attachment: fixed;
+  color: var(--foreground);
+}
+
+@keyframes flutuar {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.animar-flutuar {
+  animation: flutuar 3.5s ease-in-out infinite;
+}
+
+.faixa-promocional {
+  animation: rolar-faixa 22s linear infinite;
+}
+
+.sem-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.sem-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes rolar-faixa {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
