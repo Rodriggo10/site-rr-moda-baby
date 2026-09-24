@@ -2,6 +2,8 @@ import { listarProdutos } from "@/lib/catalog";
 import { Hero } from "@/components/Hero";
 import { Section } from "@/components/Section";
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   searchParams: Promise<{ busca?: string; categoria?: string }>;
 }

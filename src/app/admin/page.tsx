@@ -4,6 +4,8 @@ import { listarProdutos } from "@/lib/catalog";
 import { formatarMoeda } from "@/lib/pricing";
 import { BotaoExcluirProduto } from "@/components/BotaoExcluirProduto";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminDashboardPage() {
   const produtos = await listarProdutos();
 

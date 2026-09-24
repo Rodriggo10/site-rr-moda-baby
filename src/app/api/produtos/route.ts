@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { criarProduto, listarProdutos } from "@/lib/catalog";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   const produtos = await listarProdutos();
   return NextResponse.json({ produtos });

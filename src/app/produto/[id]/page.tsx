@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import { buscarProduto } from "@/lib/catalog";
 import { ProdutoDetalhe } from "@/components/ProdutoDetalhe";
 
+export const dynamic = "force-dynamic";
+
 interface Params {
   params: Promise<{ id: string }>;
 }
