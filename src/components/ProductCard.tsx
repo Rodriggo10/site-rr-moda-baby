@@ -9,6 +9,7 @@ import { formatarMoeda } from "@/lib/pricing";
 
 export function ProductCard({ produto }: { produto: Produto }) {
   const precoExibido = produto.promocao ? produto.promocao.precoPor : produto.precoVarejo;
+  const esgotado = produto.estoque <= 0;
 
   return (
     <motion.div
@@ -28,12 +29,12 @@ export function ProductCard({ produto }: { produto: Produto }) {
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
         />
 
-        {produto.esgotado && (
+        {esgotado && (
           <span className="absolute left-3 top-3 rounded-full bg-foreground/80 px-3 py-1 text-xs font-bold text-white">
             Esgotado
           </span>
         )}
-        {produto.promocao && !produto.esgotado && (
+        {produto.promocao && !esgotado && (
           <span className="absolute left-3 top-3 flex items-center gap-1 rounded-full bg-brand-orange px-3 py-1 text-xs font-bold text-white">
             <Tag size={12} /> Promoção
           </span>
@@ -61,6 +62,12 @@ export function ProductCard({ produto }: { produto: Produto }) {
             {formatarMoeda(precoExibido)}
           </span>
         </div>
+
+        {!esgotado && produto.estoque <= 3 && (
+          <p className="text-xs font-semibold text-brand-orange">
+            Últimas {produto.estoque} unidades!
+          </p>
+        )}
 
         <Link
           href={`/produto/${produto.id}`}

@@ -3,8 +3,9 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Trash2, Upload } from "lucide-react";
+import { ChevronDown, Trash2, Upload } from "lucide-react";
 import type { Produto } from "@/lib/types";
+import { ModalCategorias } from "./ModalCategorias";
 
 type Rascunho = Omit<Produto, "id" | "criadoEm">;
 
@@ -14,9 +15,9 @@ const RASCUNHO_VAZIO: Rascunho = {
   categoria: "",
   novidade: true,
   destaque: false,
-  esgotado: false,
   promocao: null,
   precoVarejo: 0,
+  estoque: 0,
   tamanhos: [],
   cores: [],
   fotos: [],
@@ -31,6 +32,7 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState("");
   const [enviandoArquivo, setEnviandoArquivo] = useState(false);
+  const [modalCategoriaAberto, setModalCategoriaAberto] = useState(false);
   const inputArquivoRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
@@ -130,11 +132,24 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className="mb-1 block text-sm font-bold">Categoria</label>
-          <input
-            value={dados.categoria}
-            onChange={(e) => setDados((d) => ({ ...d, categoria: e.target.value }))}
-            placeholder="Ex: Conjuntos, Vestidos, Camisetas"
-            className="w-full rounded-xl border-2 border-foreground/15 px-4 py-2 text-sm outline-none focus:border-brand-pink"
+          <button
+            type="button"
+            onClick={() => setModalCategoriaAberto(true)}
+            className={`flex w-full items-center justify-between rounded-xl border-2 px-4 py-2 text-left text-sm outline-none transition ${
+              dados.categoria ? "border-foreground/15 text-foreground" : "border-foreground/15 text-foreground/40"
+            } hover:border-brand-pink`}
+          >
+            {dados.categoria || "Selecione uma categoria"}
+            <ChevronDown size={16} className="shrink-0 text-foreground/40" />
+          </button>
+          <ModalCategorias
+            aberto={modalCategoriaAberto}
+            categoriaAtual={dados.categoria}
+            onSelecionar={(categoria) => {
+              setDados((d) => ({ ...d, categoria }));
+              setModalCategoriaAberto(false);
+            }}
+            onFechar={() => setModalCategoriaAberto(false)}
           />
         </div>
         <div>
@@ -146,6 +161,41 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
             onChange={(e) => setDados((d) => ({ ...d, precoVarejo: e.target.value === "" ? 0 : Number(e.target.value) }))}
             className="w-full rounded-xl border-2 border-foreground/15 px-4 py-2 text-sm outline-none focus:border-brand-pink"
           />
+        </div>
+        <div>
+          <label className="mb-1 block text-sm font-bold">Quantidade em estoque</label>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setDados((d) => ({ ...d, estoque: Math.max(0, d.estoque - 1) }))}
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border-2 border-foreground/15 text-lg font-bold transition hover:border-brand-pink"
+            >
+              −
+            </button>
+            <input
+              type="number"
+              min="0"
+              step="1"
+              value={dados.estoque || ""}
+              onChange={(e) =>
+                setDados((d) => ({
+                  ...d,
+                  estoque: e.target.value === "" ? 0 : Math.max(0, Math.floor(Number(e.target.value))),
+                }))
+              }
+              className="w-full rounded-xl border-2 border-foreground/15 px-4 py-2 text-center text-sm outline-none focus:border-brand-pink"
+            />
+            <button
+              type="button"
+              onClick={() => setDados((d) => ({ ...d, estoque: d.estoque + 1 }))}
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border-2 border-foreground/15 text-lg font-bold transition hover:border-brand-pink"
+            >
+              +
+            </button>
+          </div>
+          <p className="mt-1 text-xs text-foreground/50">
+            {dados.estoque <= 0 ? "Sem peças — aparece como esgotado no site" : `${dados.estoque} peça(s) disponível(is) para venda`}
+          </p>
         </div>
       </div>
 
@@ -247,14 +297,6 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
             onChange={(e) => setDados((d) => ({ ...d, destaque: e.target.checked }))}
           />
           Aparece em Mais vendidos
-        </label>
-        <label className="flex items-center gap-2 text-sm font-semibold">
-          <input
-            type="checkbox"
-            checked={dados.esgotado}
-            onChange={(e) => setDados((d) => ({ ...d, esgotado: e.target.checked }))}
-          />
-          Esgotado
         </label>
       </div>
 

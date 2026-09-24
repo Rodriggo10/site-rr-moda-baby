@@ -3,27 +3,9 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { CATEGORIAS_LOJA } from "@/lib/categorias";
 
-const CATEGORIAS = [
-  { nome: "Formatura infantil e juvenil", imagem: "/produtos/placeholder.svg" },
-  { nome: "Conjuntos femininos", imagem: "/produtos/placeholder.svg" },
-  { nome: "Conjuntos masculinos", imagem: "/produtos/placeholder.svg" },
-  { nome: "Blusas masculinas", imagem: "/produtos/placeholder.svg" },
-  { nome: "Blusas femininas", imagem: "/produtos/placeholder.svg" },
-  { nome: "Vestidos/ macaquitos", imagem: "/produtos/placeholder.svg" },
-  { nome: "Calça e short masculino", imagem: "/produtos/placeholder.svg" },
-  { nome: "Calça e short feminino", imagem: "/produtos/placeholder.svg" },
-  { nome: "Moda praia", imagem: "/produtos/placeholder.svg" },
-  { nome: "Bonés Feminino e masculino", imagem: "/produtos/placeholder.svg" },
-  { nome: "Calçados baby masculinos", imagem: "/produtos/placeholder.svg" },
-  { nome: "Calçados Baby femininos", imagem: "/produtos/placeholder.svg" },
-  { nome: "Bolsas", imagem: "/produtos/placeholder.svg" },
-  { nome: "Modelo adulto", imagem: "/produtos/placeholder.svg" },
-  { nome: "Moda íntima /meias", imagem: "/produtos/placeholder.svg" },
-  { nome: "Espaço do Bebê", imagem: "/produtos/placeholder.svg" },
-  { nome: "Fitness", imagem: "/produtos/placeholder.svg" },
-  { nome: "Brinquedos", imagem: "/produtos/placeholder.svg" },
-];
+const CATEGORIAS = CATEGORIAS_LOJA.map((nome) => ({ nome, imagem: "/produtos/placeholder.svg" }));
 
 export function CategoriasDestaque() {
   const trilhoRef = useRef<HTMLDivElement>(null);

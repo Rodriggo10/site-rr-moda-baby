@@ -7,9 +7,9 @@ create table if not exists produtos (
   categoria text not null default '',
   novidade boolean not null default false,
   destaque boolean not null default false,
-  esgotado boolean not null default false,
   promocao jsonb,
   preco_varejo numeric not null default 0,
+  estoque integer not null default 0,
   tamanhos text[] not null default '{}',
   cores text[] not null default '{}',
   fotos text[] not null default '{}',
@@ -33,27 +33,27 @@ values ('produtos', 'produtos', true)
 on conflict (id) do nothing;
 
 -- Dados de exemplo (os mesmos que já existiam no site)
-insert into produtos (id, nome, descricao, categoria, novidade, destaque, esgotado, promocao, preco_varejo, tamanhos, cores, fotos, videos)
+insert into produtos (id, nome, descricao, categoria, novidade, destaque, promocao, preco_varejo, estoque, tamanhos, cores, fotos, videos)
 values
   (
     'produto-exemplo-1',
     'Produto exemplo 1 (edite no painel)',
     'Descrição do produto. Troque pelo texto real no painel administrativo.',
-    'Conjuntos', true, true, false, null, 49.90,
+    'Conjuntos', true, true, null, 49.90, 10,
     array['1','2','4','6'], array['Rosa','Azul'], array['/produtos/placeholder.svg'], array[]::text[]
   ),
   (
     'produto-exemplo-2',
     'Produto exemplo 2 (edite no painel)',
     'Descrição do produto. Troque pelo texto real no painel administrativo.',
-    'Camisetas', true, false, false, '{"precoDe": 39.9, "precoPor": 29.9}'::jsonb, 39.90,
+    'Camisetas', true, false, '{"precoDe": 39.9, "precoPor": 29.9}'::jsonb, 39.90, 10,
     array['2','4','6','8'], array['Branco','Amarelo'], array['/produtos/placeholder.svg'], array[]::text[]
   ),
   (
     'produto-exemplo-3',
     'Produto exemplo 3 (edite no painel)',
     'Descrição do produto. Troque pelo texto real no painel administrativo.',
-    'Vestidos', false, true, false, null, 79.90,
+    'Vestidos', false, true, null, 79.90, 10,
     array['2','4','6'], array['Rosa','Vermelho'], array['/produtos/placeholder.svg'], array[]::text[]
   )
 on conflict (id) do nothing;

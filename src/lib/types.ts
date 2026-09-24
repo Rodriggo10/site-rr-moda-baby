@@ -10,9 +10,9 @@ export interface Produto {
   categoria: string;
   novidade: boolean;
   destaque: boolean; // aparece em "Mais vendidos"
-  esgotado: boolean;
   promocao: Promocao | null;
   precoVarejo: number;
+  estoque: number;
   tamanhos: string[];
   cores: string[];
   fotos: string[];

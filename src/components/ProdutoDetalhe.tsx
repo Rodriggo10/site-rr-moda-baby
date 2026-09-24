@@ -18,6 +18,7 @@ export function ProdutoDetalhe({ produto }: { produto: Produto }) {
   const router = useRouter();
 
   const precoExibido = produto.promocao ? produto.promocao.precoPor : produto.precoVarejo;
+  const esgotado = produto.estoque <= 0;
 
   function adicionarAoCarrinho() {
     adicionarItem({
@@ -76,6 +77,14 @@ export function ProdutoDetalhe({ produto }: { produto: Produto }) {
             </span>
           </div>
 
+          {!esgotado && (
+            <p className={`mt-1 text-sm font-semibold ${produto.estoque <= 3 ? "text-brand-orange" : "text-foreground/60"}`}>
+              {produto.estoque <= 3
+                ? `Últimas ${produto.estoque} unidades em estoque!`
+                : `${produto.estoque} unidades em estoque`}
+            </p>
+          )}
+
           <p className="mt-1 flex items-center gap-1.5 text-sm font-semibold text-brand-blue-dark">
             <Package size={15} />
             Compre {QTD_MINIMA_ATACADO} peças ou mais (somando todo o carrinho) e ganhe 20% de
@@ -124,26 +133,28 @@ export function ProdutoDetalhe({ produto }: { produto: Produto }) {
             </div>
           )}
 
-          <div className="mt-6 flex items-center gap-3">
-            <p className="text-sm font-bold text-foreground">Quantidade</p>
-            <div className="flex items-center rounded-full border-2 border-foreground/15">
-              <button
-                onClick={() => setQuantidade((q) => Math.max(1, q - 1))}
-                className="px-3 py-1 text-lg font-bold"
-              >
-                −
-              </button>
-              <span className="w-8 text-center font-semibold">{quantidade}</span>
-              <button
-                onClick={() => setQuantidade((q) => q + 1)}
-                className="px-3 py-1 text-lg font-bold"
-              >
-                +
-              </button>
+          {!esgotado && (
+            <div className="mt-6 flex items-center gap-3">
+              <p className="text-sm font-bold text-foreground">Quantidade</p>
+              <div className="flex items-center rounded-full border-2 border-foreground/15">
+                <button
+                  onClick={() => setQuantidade((q) => Math.max(1, q - 1))}
+                  className="px-3 py-1 text-lg font-bold"
+                >
+                  −
+                </button>
+                <span className="w-8 text-center font-semibold">{quantidade}</span>
+                <button
+                  onClick={() => setQuantidade((q) => Math.min(produto.estoque, q + 1))}
+                  className="px-3 py-1 text-lg font-bold"
+                >
+                  +
+                </button>
+              </div>
             </div>
-          </div>
+          )}
 
-          {produto.esgotado ? (
+          {esgotado ? (
             <div className="mt-8 rounded-2xl bg-foreground/10 px-4 py-3 text-center font-bold text-foreground/60">
               Produto esgotado no momento
             </div>

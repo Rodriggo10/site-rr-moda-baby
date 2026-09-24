@@ -3,6 +3,7 @@ import Link from "next/link";
 import { listarProdutos } from "@/lib/catalog";
 import { formatarMoeda } from "@/lib/pricing";
 import { BotaoExcluirProduto } from "@/components/BotaoExcluirProduto";
+import { AjusteEstoque } from "@/components/AjusteEstoque";
 
 export const dynamic = "force-dynamic";
 
@@ -38,10 +39,13 @@ export default async function AdminDashboardPage() {
                   {formatarMoeda(produto.precoVarejo)}
                 </p>
                 <p className="text-xs text-foreground/50">
-                  {produto.esgotado ? "Esgotado" : "Disponível"}
+                  {produto.estoque <= 0 ? "Esgotado" : "Disponível"}
                   {produto.destaque && " · Mais vendido"}
                   {produto.promocao && " · Promoção"}
                 </p>
+                <div className="pt-1">
+                  <AjusteEstoque id={produto.id} estoqueInicial={produto.estoque} />
+                </div>
                 <div className="mt-auto flex gap-2 pt-2">
                   <Link
                     href={`/admin/produtos/${produto.id}`}
