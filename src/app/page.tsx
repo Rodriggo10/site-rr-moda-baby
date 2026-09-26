@@ -1,4 +1,5 @@
 import { listarProdutos } from "@/lib/catalog";
+import { listarImagensCategorias } from "@/lib/categoriasImagens";
 import { Hero } from "@/components/Hero";
 import { Section } from "@/components/Section";
 
@@ -51,10 +52,11 @@ export default async function Home({ searchParams }: Props) {
   const novidades = produtos.filter((p) => p.novidade);
   const maisVendidos = produtos.filter((p) => p.destaque);
   const promocoes = produtos.filter((p) => p.promocao);
+  const imagensCategorias = await listarImagensCategorias();
 
   return (
     <>
-      <Hero />
+      <Hero imagensCategorias={imagensCategorias} />
 
       <Section titulo="Novidades" produtos={novidades} />
 

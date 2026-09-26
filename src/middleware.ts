@@ -8,9 +8,18 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (pathname.startsWith("/admin") || pathname.startsWith("/api/produtos") || pathname.startsWith("/api/upload")) {
-    // GET em /api/produtos é público (catálogo lê os produtos) — só protege escrita e o painel
-    if (pathname.startsWith("/api/produtos") && request.method === "GET") {
+  if (
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/api/produtos") ||
+    pathname.startsWith("/api/upload") ||
+    pathname.startsWith("/api/categorias-imagens")
+  ) {
+    // GET em /api/produtos e /api/categorias-imagens é público (a loja lê esses dados) —
+    // só protege escrita e o painel
+    if (
+      (pathname.startsWith("/api/produtos") || pathname.startsWith("/api/categorias-imagens")) &&
+      request.method === "GET"
+    ) {
       return NextResponse.next();
     }
 
@@ -29,5 +38,10 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/produtos/:path*", "/api/upload/:path*"],
+  matcher: [
+    "/admin/:path*",
+    "/api/produtos/:path*",
+    "/api/upload/:path*",
+    "/api/categorias-imagens/:path*",
+  ],
 };

@@ -5,9 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { CATEGORIAS_LOJA } from "@/lib/categorias";
 
-const CATEGORIAS = CATEGORIAS_LOJA.map((nome) => ({ nome, imagem: "/produtos/placeholder.svg" }));
-
-export function CategoriasDestaque() {
+export function CategoriasDestaque({ imagens }: { imagens: Record<string, string> }) {
+  const categorias = CATEGORIAS_LOJA.map((nome) => ({
+    nome,
+    imagem: imagens[nome] || "/produtos/placeholder.svg",
+  }));
   const trilhoRef = useRef<HTMLDivElement>(null);
   const arrastando = useRef(false);
   const inicioX = useRef(0);
@@ -59,7 +61,7 @@ export function CategoriasDestaque() {
             ativo ? "cursor-grabbing" : "cursor-grab"
           }`}
         >
-          {CATEGORIAS.map((categoria) => (
+          {categorias.map((categoria) => (
             <Link
               key={categoria.nome}
               href={`/?categoria=${encodeURIComponent(categoria.nome)}`}

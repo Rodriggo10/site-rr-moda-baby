@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LogOut, Plus } from "lucide-react";
+import { Image as ImageIcon, LogOut, Plus } from "lucide-react";
 
 export function AdminNav() {
   const pathname = usePathname();
@@ -23,6 +23,12 @@ export function AdminNav() {
           Painel — R&amp;R Moda Baby
         </Link>
         <div className="flex items-center gap-3">
+          <Link
+            href="/admin/categorias"
+            className="flex items-center gap-1 rounded-full border-2 border-foreground/15 px-4 py-2 text-sm font-bold text-foreground/70 transition hover:border-brand-pink hover:text-brand-pink"
+          >
+            <ImageIcon size={16} /> Fotos das categorias
+          </Link>
           <Link
             href="/admin/produtos/novo"
             className="flex items-center gap-1 rounded-full bg-brand-pink px-4 py-2 text-sm font-bold text-white transition hover:bg-brand-pink-dark"
