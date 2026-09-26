@@ -5,9 +5,13 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 
 const BANNERS = [
-  { src: "/marca/capa6.jpg", alt: "R&R Confecções — Moda Baby e Infantil" },
-  { src: "/marca/capa5.jpg", alt: "R&R Confecções — Moda Baby e Infantil" },
-  { src: "/marca/capa.jpg", alt: "R&R Confecções — Moda Baby e Infantil — Varejo e Atacado" },
+  { src: "/marca/capa6.jpg", alt: "R&R Confecções — Moda Baby e Infantil", aspecto: "1280 / 720" },
+  { src: "/marca/capa5.jpg", alt: "R&R Confecções — Moda Baby e Infantil", aspecto: "1280 / 720" },
+  {
+    src: "/marca/capa.jpg",
+    alt: "R&R Confecções — Moda Baby e Infantil — Varejo e Atacado",
+    aspecto: "1543 / 672",
+  },
 ];
 
 const INTERVALO_MS = 4500;
@@ -23,7 +27,10 @@ export function BannerCarousel() {
   }, []);
 
   return (
-    <div className="relative w-full" style={{ aspectRatio: "1543 / 672" }}>
+    <div
+      className="relative w-full transition-[aspect-ratio] duration-500"
+      style={{ aspectRatio: BANNERS[indice].aspecto }}
+    >
       <AnimatePresence initial={false}>
         <motion.div
           key={BANNERS[indice].src}
