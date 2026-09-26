@@ -5,13 +5,13 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 
 const BANNERS = [
+  { src: "/marca/capa6.jpg", alt: "R&R Confecções — Moda Baby e Infantil", posicao: "center" },
+  { src: "/marca/capa5.jpg", alt: "R&R Confecções — Moda Baby e Infantil", posicao: "center" },
   {
     src: "/marca/capa.jpg",
     alt: "R&R Confecções — Moda Baby e Infantil — Varejo e Atacado",
     posicao: "center",
   },
-  { src: "/marca/capa3.jpg", alt: "R&R Confecções — Moda Baby e Infantil", posicao: "center" },
-  { src: "/marca/capa4.jpg", alt: "R&R Confecções — Moda Baby e Infantil", posicao: "center top" },
 ];
 
 const INTERVALO_MS = 4500;
