@@ -28,6 +28,7 @@ export function ProdutoDetalhe({ produto }: { produto: Produto }) {
       cor,
       quantidade,
       precoUnitario: precoExibido,
+      participaAtacado: produto.participaAtacado,
     });
     setAdicionado(true);
     setTimeout(() => setAdicionado(false), 1800);

@@ -257,15 +257,15 @@ export default function CarrinhoPage() {
         <Package size={20} className="shrink-0" />
         {totais.ehAtacado ? (
           <span>
-            Preço de atacado aplicado! {totais.quantidadeTotal} peças no carrinho — 20% de
-            desconto no valor dos produtos.
+            Preço de atacado aplicado! {totais.quantidadeAtacado} peças elegíveis no carrinho
+            — 20% de desconto nessas peças.
           </span>
         ) : (
           <span>
             Faltam {totais.faltamParaAtacado}{" "}
-            {totais.faltamParaAtacado === 1 ? "peça" : "peças"} para o preço de atacado: a
-            partir de {QTD_MINIMA_ATACADO} peças, 20% de desconto automático no valor dos
-            produtos!
+            {totais.faltamParaAtacado === 1 ? "peça" : "peças"} elegíveis para o preço de
+            atacado: a partir de {QTD_MINIMA_ATACADO} peças, 20% de desconto automático nos
+            produtos participantes!
           </span>
         )}
       </div>

@@ -18,6 +18,7 @@ const RASCUNHO_VAZIO: Rascunho = {
   promocao: null,
   precoVarejo: 0,
   estoque: 0,
+  participaAtacado: true,
   tamanhos: [],
   cores: [],
   fotos: [],
@@ -200,9 +201,24 @@ export function ProdutoForm({ produto }: { produto?: Produto }) {
       </div>
 
       <div className="rounded-2xl bg-brand-blue/5 p-4 text-sm text-brand-blue-dark">
-        <b>Regra de atacado da loja:</b> a partir de 6 peças no carrinho (somando todos os
-        produtos), o cliente já ganha 20% de desconto automático. Essa regra é fixa e vale
-        para todos os produtos — não precisa configurar nada aqui.
+        <p className="mb-3">
+          <b>Regra de atacado da loja:</b> a partir de 6 peças elegíveis no carrinho (somando
+          os produtos marcados abaixo), o cliente ganha 20% de desconto automático nessas
+          peças.
+        </p>
+        <label className="flex items-center gap-2 text-sm font-bold">
+          <input
+            type="checkbox"
+            checked={dados.participaAtacado}
+            onChange={(e) => setDados((d) => ({ ...d, participaAtacado: e.target.checked }))}
+          />
+          Este produto entra no atacado
+        </label>
+        <p className="mt-1 text-xs text-brand-blue-dark/70">
+          {dados.participaAtacado
+            ? "Conta para o mínimo de 6 peças e recebe os 20% de desconto."
+            : "Não conta para o mínimo e nunca recebe o desconto de atacado — sempre vendido no preço de varejo."}
+        </p>
       </div>
 
       <div className="rounded-2xl bg-brand-orange/5 p-4">

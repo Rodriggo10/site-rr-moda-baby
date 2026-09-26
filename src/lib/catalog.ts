@@ -11,6 +11,7 @@ interface LinhaProduto {
   promocao: { precoDe: number; precoPor: number } | null;
   preco_varejo: number;
   estoque: number;
+  participa_atacado: boolean;
   tamanhos: string[];
   cores: string[];
   fotos: string[];
@@ -29,6 +30,7 @@ function paraProduto(linha: LinhaProduto): Produto {
     promocao: linha.promocao,
     precoVarejo: Number(linha.preco_varejo),
     estoque: Number(linha.estoque ?? 0),
+    participaAtacado: linha.participa_atacado ?? true,
     tamanhos: linha.tamanhos ?? [],
     cores: linha.cores ?? [],
     fotos: linha.fotos ?? [],
@@ -47,6 +49,7 @@ function paraLinha(produto: Partial<Produto>) {
   if (produto.promocao !== undefined) linha.promocao = produto.promocao;
   if (produto.precoVarejo !== undefined) linha.preco_varejo = produto.precoVarejo;
   if (produto.estoque !== undefined) linha.estoque = produto.estoque;
+  if (produto.participaAtacado !== undefined) linha.participa_atacado = produto.participaAtacado;
   if (produto.tamanhos !== undefined) linha.tamanhos = produto.tamanhos;
   if (produto.cores !== undefined) linha.cores = produto.cores;
   if (produto.fotos !== undefined) linha.fotos = produto.fotos;

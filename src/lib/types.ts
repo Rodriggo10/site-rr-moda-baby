@@ -13,6 +13,7 @@ export interface Produto {
   promocao: Promocao | null;
   precoVarejo: number;
   estoque: number;
+  participaAtacado: boolean;
   tamanhos: string[];
   cores: string[];
   fotos: string[];
@@ -27,4 +28,5 @@ export interface ItemCarrinho {
   cor: string;
   quantidade: number;
   precoUnitario: number;
+  participaAtacado: boolean;
 }

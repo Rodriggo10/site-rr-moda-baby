@@ -10,6 +10,7 @@ create table if not exists produtos (
   promocao jsonb,
   preco_varejo numeric not null default 0,
   estoque integer not null default 0,
+  participa_atacado boolean not null default true,
   tamanhos text[] not null default '{}',
   cores text[] not null default '{}',
   fotos text[] not null default '{}',
@@ -33,27 +34,27 @@ values ('produtos', 'produtos', true)
 on conflict (id) do nothing;
 
 -- Dados de exemplo (os mesmos que já existiam no site)
-insert into produtos (id, nome, descricao, categoria, novidade, destaque, promocao, preco_varejo, estoque, tamanhos, cores, fotos, videos)
+insert into produtos (id, nome, descricao, categoria, novidade, destaque, promocao, preco_varejo, estoque, participa_atacado, tamanhos, cores, fotos, videos)
 values
   (
     'produto-exemplo-1',
     'Produto exemplo 1 (edite no painel)',
     'Descrição do produto. Troque pelo texto real no painel administrativo.',
-    'Conjuntos', true, true, null, 49.90, 10,
+    'Conjuntos', true, true, null, 49.90, 10, true,
     array['1','2','4','6'], array['Rosa','Azul'], array['/produtos/placeholder.svg'], array[]::text[]
   ),
   (
     'produto-exemplo-2',
     'Produto exemplo 2 (edite no painel)',
     'Descrição do produto. Troque pelo texto real no painel administrativo.',
-    'Camisetas', true, false, '{"precoDe": 39.9, "precoPor": 29.9}'::jsonb, 39.90, 10,
+    'Camisetas', true, false, '{"precoDe": 39.9, "precoPor": 29.9}'::jsonb, 39.90, 10, true,
     array['2','4','6','8'], array['Branco','Amarelo'], array['/produtos/placeholder.svg'], array[]::text[]
   ),
   (
     'produto-exemplo-3',
     'Produto exemplo 3 (edite no painel)',
     'Descrição do produto. Troque pelo texto real no painel administrativo.',
-    'Vestidos', false, true, null, 79.90, 10,
+    'Vestidos', false, true, null, 79.90, 10, true,
     array['2','4','6'], array['Rosa','Vermelho'], array['/produtos/placeholder.svg'], array[]::text[]
   )
 on conflict (id) do nothing;

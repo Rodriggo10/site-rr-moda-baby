@@ -42,7 +42,7 @@ export function montarMensagemPedido(
   if (totais.ehAtacado) {
     linhas.push("");
     linhas.push(
-      `Desconto atacado (${totais.quantidadeTotal} peças, 20%): -${formatarMoeda(
+      `Desconto atacado (${totais.quantidadeAtacado} peças, 20%): -${formatarMoeda(
         totais.valorDesconto
       )}`
     );
