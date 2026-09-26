@@ -18,4 +18,5 @@ export const CATEGORIAS_LOJA = [
   "Fitness",
   "Brinquedos",
   "Temáticos",
+  "Infantil",
 ];
