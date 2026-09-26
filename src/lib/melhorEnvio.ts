@@ -77,6 +77,7 @@ export async function calcularFrete({
 
   return dados
     .filter((opcao) => !opcao.error)
+    .filter((opcao) => !ehTransportadoraAerea(opcao.company?.name))
     .map((opcao) => ({
       id: opcao.id,
       nome: opcao.name,
@@ -84,4 +85,14 @@ export async function calcularFrete({
       prazoDias: opcao.delivery_time,
       transportadora: opcao.company?.name ?? "",
     }));
+}
+
+// Transportadoras que operam por via aérea (cargo de companhias aéreas) — a
+// loja só trabalha com envio terrestre (Correios, Jadlog, etc.).
+const TRANSPORTADORAS_AEREAS = ["latam", "azul", "gollog"];
+
+function ehTransportadoraAerea(nomeTransportadora?: string): boolean {
+  if (!nomeTransportadora) return false;
+  const nome = nomeTransportadora.toLowerCase();
+  return TRANSPORTADORAS_AEREAS.some((aerea) => nome.includes(aerea));
 }
