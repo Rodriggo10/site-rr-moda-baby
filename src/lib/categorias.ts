@@ -1,5 +1,6 @@
 export const CATEGORIAS_LOJA = [
   "Formatura infantil e juvenil",
+  "Infantil",
   "Conjuntos femininos",
   "Conjuntos masculinos",
   "Blusas masculinas",
@@ -18,5 +19,4 @@ export const CATEGORIAS_LOJA = [
   "Fitness",
   "Brinquedos",
   "Temáticos",
-  "Infantil",
 ];
