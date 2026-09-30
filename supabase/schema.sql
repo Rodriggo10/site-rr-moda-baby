@@ -23,6 +23,13 @@ create table if not exists categorias_imagens (
   imagem text not null default ''
 );
 
+create table if not exists banners (
+  id uuid primary key default gen_random_uuid(),
+  imagem text not null,
+  ordem integer not null default 0,
+  criado_em timestamptz not null default now()
+);
+
 create table if not exists clientes (
   id uuid primary key default gen_random_uuid(),
   nome text not null,

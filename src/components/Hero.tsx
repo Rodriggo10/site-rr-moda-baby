@@ -3,11 +3,18 @@
 import { motion } from "framer-motion";
 import { BannerCarousel } from "./BannerCarousel";
 import { CategoriasDestaque } from "./CategoriasDestaque";
+import type { Banner } from "@/lib/banners";
 
-export function Hero({ imagensCategorias }: { imagensCategorias: Record<string, string> }) {
+export function Hero({
+  imagensCategorias,
+  banners,
+}: {
+  imagensCategorias: Record<string, string>;
+  banners: Banner[];
+}) {
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-brand-blue/15 via-white to-white">
-      <BannerCarousel />
+      <BannerCarousel banners={banners} />
 
       <CategoriasDestaque imagens={imagensCategorias} />
 
