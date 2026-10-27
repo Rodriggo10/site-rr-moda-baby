@@ -1,0 +1,19 @@
+name: Manter site ativo
+
+# O Supabase (plano grátis) pausa o projeto após ~7 dias sem acesso ao banco.
+# Esta rotina acessa o site todo dia, o que mantém o banco ativo.
+on:
+  schedule:
+    - cron: "17 9 * * *"
+  workflow_dispatch:
+
+jobs:
+  visitar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Acessar a home e a API de produtos (ambas consultam o banco)
+        run: |
+          curl --fail --silent --show-error --retry 3 --retry-delay 20 --max-time 60 \
+            -o /dev/null -w "Home: HTTP %{http_code}\n" https://rrmodababy.netlify.app/
+          curl --fail --silent --show-error --retry 3 --retry-delay 20 --max-time 60 \
+            -o /dev/null -w "API produtos: HTTP %{http_code}\n" https://rrmodababy.netlify.app/api/produtos
