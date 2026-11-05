@@ -3,12 +3,13 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { CATEGORIAS_LOJA } from "@/lib/categorias";
+import type { Categoria } from "@/lib/categorias";
 
-export function CategoriasDestaque({ imagens }: { imagens: Record<string, string> }) {
-  const categorias = CATEGORIAS_LOJA.map((nome) => ({
-    nome,
-    imagem: imagens[nome] || "/produtos/placeholder.svg",
+export function CategoriasDestaque({ categorias: lista }: { categorias: Categoria[] }) {
+  const categorias = lista.map((c) => ({
+    id: c.id,
+    nome: c.nome,
+    imagem: c.imagem || "/produtos/placeholder.svg",
   }));
   const trilhoRef = useRef<HTMLDivElement>(null);
   const arrastando = useRef(false);
@@ -63,7 +64,7 @@ export function CategoriasDestaque({ imagens }: { imagens: Record<string, string
         >
           {categorias.map((categoria) => (
             <Link
-              key={categoria.nome}
+              key={categoria.id}
               href={`/?categoria=${encodeURIComponent(categoria.nome)}`}
               onClick={aoClicarLink}
               draggable={false}

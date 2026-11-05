@@ -18,9 +18,12 @@ create table if not exists produtos (
   criado_em timestamptz not null default now()
 );
 
-create table if not exists categorias_imagens (
-  categoria text primary key,
-  imagem text not null default ''
+create table if not exists categorias (
+  id uuid primary key default gen_random_uuid(),
+  nome text not null unique,
+  imagem text not null default '',
+  ordem integer not null default 0,
+  criado_em timestamptz not null default now()
 );
 
 create table if not exists banners (
@@ -44,6 +47,31 @@ create table if not exists clientes (
 insert into storage.buckets (id, name, public)
 values ('produtos', 'produtos', true)
 on conflict (id) do nothing;
+
+-- Categorias iniciais da loja (a cliente edita pelo painel)
+insert into categorias (nome, ordem)
+values
+  ('Formatura infantil e juvenil', 0),
+  ('Infantil', 1),
+  ('Conjuntos femininos', 2),
+  ('Conjuntos masculinos', 3),
+  ('Blusas masculinas', 4),
+  ('Blusas femininas', 5),
+  ('Vestidos/ macaquitos', 6),
+  ('Calça e short masculino', 7),
+  ('Calça e short feminino', 8),
+  ('Moda praia', 9),
+  ('Bonés Feminino e masculino', 10),
+  ('Calçados baby masculinos', 11),
+  ('Calçados Baby femininos', 12),
+  ('Bolsas', 13),
+  ('Modelo adulto', 14),
+  ('Moda íntima /meias', 15),
+  ('Espaço do Bebê', 16),
+  ('Fitness', 17),
+  ('Brinquedos', 18),
+  ('Temáticos', 19)
+on conflict (nome) do nothing;
 
 -- Dados de exemplo (os mesmos que já existiam no site)
 insert into produtos (id, nome, descricao, categoria, novidade, destaque, promocao, preco_varejo, estoque, participa_atacado, tamanhos, cores, fotos, videos)

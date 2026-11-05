@@ -1,7 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Check, X } from "lucide-react";
-import { CATEGORIAS_LOJA } from "@/lib/categorias";
+import type { Categoria } from "@/lib/categorias";
 
 export function ModalCategorias({
   aberto,
@@ -14,6 +15,18 @@ export function ModalCategorias({
   onSelecionar: (categoria: string) => void;
   onFechar: () => void;
 }) {
+  const [nomes, setNomes] = useState<string[]>([]);
+  const [carregando, setCarregando] = useState(false);
+
+  useEffect(() => {
+    if (!aberto) return;
+    setCarregando(true);
+    fetch("/api/categorias")
+      .then((r) => r.json())
+      .then((json) => setNomes((json.categorias as Categoria[]).map((c) => c.nome)))
+      .finally(() => setCarregando(false));
+  }, [aberto]);
+
   if (!aberto) return null;
 
   return (
@@ -42,8 +55,14 @@ export function ModalCategorias({
         </div>
 
         <div className="overflow-y-auto p-4">
+          {carregando && <p className="text-sm text-foreground/60">Carregando...</p>}
+          {!carregando && nomes.length === 0 && (
+            <p className="text-sm text-foreground/60">
+              Nenhuma categoria cadastrada. Crie uma em &ldquo;Categorias&rdquo; no menu do painel.
+            </p>
+          )}
           <div className="grid gap-2 sm:grid-cols-2">
-            {CATEGORIAS_LOJA.map((nome) => {
+            {nomes.map((nome) => {
               const selecionada = nome === categoriaAtual;
               return (
                 <button

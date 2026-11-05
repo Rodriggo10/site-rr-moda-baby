@@ -12,14 +12,14 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/admin") ||
     pathname.startsWith("/api/produtos") ||
     pathname.startsWith("/api/upload") ||
-    pathname.startsWith("/api/categorias-imagens") ||
+    pathname.startsWith("/api/categorias") ||
     pathname.startsWith("/api/banners")
   ) {
-    // GET em /api/produtos, /api/categorias-imagens e /api/banners é público
+    // GET em /api/produtos, /api/categorias e /api/banners é público
     // (a loja lê esses dados) — só protege escrita e o painel
     if (
       (pathname.startsWith("/api/produtos") ||
-        pathname.startsWith("/api/categorias-imagens") ||
+        pathname.startsWith("/api/categorias") ||
         pathname.startsWith("/api/banners")) &&
       request.method === "GET"
     ) {
@@ -45,7 +45,7 @@ export const config = {
     "/admin/:path*",
     "/api/produtos/:path*",
     "/api/upload/:path*",
-    "/api/categorias-imagens/:path*",
+    "/api/categorias/:path*",
     "/api/banners/:path*",
   ],
 };

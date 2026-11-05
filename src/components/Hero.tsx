@@ -4,19 +4,20 @@ import { motion } from "framer-motion";
 import { BannerCarousel } from "./BannerCarousel";
 import { CategoriasDestaque } from "./CategoriasDestaque";
 import type { Banner } from "@/lib/banners";
+import type { Categoria } from "@/lib/categorias";
 
 export function Hero({
-  imagensCategorias,
+  categorias,
   banners,
 }: {
-  imagensCategorias: Record<string, string>;
+  categorias: Categoria[];
   banners: Banner[];
 }) {
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-brand-blue/15 via-white to-white">
       <BannerCarousel banners={banners} />
 
-      <CategoriasDestaque imagens={imagensCategorias} />
+      <CategoriasDestaque categorias={categorias} />
 
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         <motion.div

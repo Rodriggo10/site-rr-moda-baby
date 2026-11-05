@@ -33,7 +33,7 @@ export function AdminNav() {
             href="/admin/categorias"
             className="flex items-center gap-1 rounded-full border-2 border-foreground/15 px-4 py-2 text-sm font-bold text-foreground/70 transition hover:border-brand-pink hover:text-brand-pink"
           >
-            <ImageIcon size={16} /> Fotos das categorias
+            <ImageIcon size={16} /> Categorias
           </Link>
           <Link
             href="/admin/produtos/novo"
