@@ -2,9 +2,16 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Check, Minus, Package, Plus, ShoppingBag, Trash2, Truck } from "lucide-react";
+import { Check, Minus, Package, Plus, ShoppingBag, Ticket, Trash2, Truck, X } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
-import { QTD_MINIMA_ATACADO, calcularTotaisCarrinho, formatarMoeda } from "@/lib/pricing";
+import {
+  QTD_MINIMA_ATACADO,
+  calcularDescontoCupom,
+  calcularTotaisCarrinho,
+  descreverCupom,
+  formatarMoeda,
+  type RegraCupom,
+} from "@/lib/pricing";
 import { montarMensagemPedido, linkWhatsApp } from "@/lib/whatsapp";
 import { useConta } from "@/lib/useConta";
 import type { OpcaoFrete } from "@/lib/melhorEnvio";
@@ -13,6 +20,11 @@ function formatarCep(valor: string) {
   const numeros = valor.replace(/\D/g, "").slice(0, 8);
   if (numeros.length <= 5) return numeros;
   return `${numeros.slice(0, 5)}-${numeros.slice(5)}`;
+}
+
+interface CupomAplicado extends RegraCupom {
+  codigo: string;
+  pedidoMinimo: number | null;
 }
 
 function classeInput(comErro: boolean) {
@@ -46,6 +58,11 @@ export default function CarrinhoPage() {
   const [calculandoFrete, setCalculandoFrete] = useState(false);
   const [erroFrete, setErroFrete] = useState("");
 
+  const [codigoCupom, setCodigoCupom] = useState("");
+  const [cupom, setCupom] = useState<CupomAplicado | null>(null);
+  const [erroCupom, setErroCupom] = useState("");
+  const [validandoCupom, setValidandoCupom] = useState(false);
+
   useEffect(() => {
     if (!cliente) return;
     setNome((atual) => atual || cliente.nome);
@@ -63,7 +80,48 @@ export default function CarrinhoPage() {
   const totais = calcularTotaisCarrinho(itens);
   const totalItens = totais.quantidadeTotal;
   const valorFrete = freteSelecionado ? Number(freteSelecionado.preco) : 0;
-  const totalComFrete = totais.subtotal + valorFrete;
+
+  // Cupom não acumula com o desconto de atacado e respeita o pedido mínimo.
+  const abaixoDoMinimo =
+    cupom?.pedidoMinimo != null && totais.subtotalSemDesconto < cupom.pedidoMinimo;
+  const cupomEmEfeito = cupom && !totais.ehAtacado && !abaixoDoMinimo ? cupom : null;
+  const descontoCupom = cupomEmEfeito ? calcularDescontoCupom(cupomEmEfeito, totais.subtotal) : 0;
+  const totalComFrete = totais.subtotal - descontoCupom + valorFrete;
+
+  async function aplicarCupom() {
+    const codigo = codigoCupom.trim();
+    if (!codigo) return;
+    setErroCupom("");
+    if (totais.ehAtacado) {
+      setErroCupom("Seu pedido já tem o desconto de atacado, que não acumula com cupom.");
+      return;
+    }
+    setValidandoCupom(true);
+    try {
+      const resposta = await fetch("/api/cupom/validar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ codigo, subtotal: totais.subtotal }),
+      });
+      const dados = await resposta.json();
+      if (!resposta.ok) {
+        setCupom(null);
+        setErroCupom(dados.erro ?? "Cupom inválido.");
+        return;
+      }
+      setCupom(dados.cupom);
+      setCodigoCupom("");
+    } catch {
+      setErroCupom("Não foi possível conferir o cupom agora. Tente de novo.");
+    } finally {
+      setValidandoCupom(false);
+    }
+  }
+
+  function removerCupom() {
+    setCupom(null);
+    setErroCupom("");
+  }
 
   async function aoSairDoCep() {
     const cepLimpo = cep.replace(/\D/g, "");
@@ -153,7 +211,7 @@ export default function CarrinhoPage() {
     return !Object.values(erros).some(Boolean);
   }
 
-  function finalizarNoWhatsApp() {
+  async function finalizarNoWhatsApp() {
     if (!validarCamposObrigatorios()) {
       setMostrarAvisoObrigatorios(true);
       return;
@@ -170,9 +228,38 @@ export default function CarrinhoPage() {
             preco: Number(freteSelecionado.preco),
             prazoDias: freteSelecionado.prazoDias,
           }
-        : null
+        : null,
+      cupomEmEfeito ? { codigo: cupomEmEfeito.codigo, desconto: descontoCupom } : null
     );
-    window.open(linkWhatsApp(mensagem), "_blank");
+    const link = linkWhatsApp(mensagem);
+
+    if (!cupomEmEfeito) {
+      window.open(link, "_blank");
+      return;
+    }
+
+    // Abre a aba já no clique (senão o navegador bloqueia) e só depois conta o uso do cupom.
+    const janela = window.open("", "_blank");
+    try {
+      const resposta = await fetch("/api/cupom/usar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ codigo: cupomEmEfeito.codigo, subtotal: totais.subtotal }),
+      });
+      if (!resposta.ok) {
+        const dados = await resposta.json();
+        throw new Error(dados.erro ?? "Cupom inválido.");
+      }
+    } catch (erro) {
+      janela?.close();
+      setCupom(null);
+      setErroCupom(
+        `${erro instanceof Error ? erro.message : "Cupom inválido."} O cupom foi removido do pedido.`
+      );
+      return;
+    }
+    if (janela) janela.location.href = link;
+    else window.location.href = link;
   }
 
   if (itens.length === 0) {
@@ -416,6 +503,68 @@ export default function CarrinhoPage() {
         )}
       </div>
 
+      <div className="mt-6 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5">
+        <p className="mb-3 flex items-center gap-2 font-bold">
+          <Ticket size={18} className="text-brand-pink" /> Cupom de desconto
+        </p>
+
+        {cupom ? (
+          <div className="flex items-center justify-between gap-3 rounded-xl bg-brand-green/10 px-4 py-2.5 text-sm font-semibold text-brand-green">
+            <span>
+              Cupom <strong>{cupom.codigo}</strong> — {descreverCupom(cupom)}
+            </span>
+            <button
+              type="button"
+              onClick={removerCupom}
+              aria-label="Remover cupom"
+              className="shrink-0 text-brand-green/70 transition hover:text-brand-green"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        ) : (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              aplicarCupom();
+            }}
+            className="flex gap-2"
+          >
+            <input
+              value={codigoCupom}
+              onChange={(e) => {
+                setCodigoCupom(e.target.value.toUpperCase().replace(/\s/g, ""));
+                setErroCupom("");
+              }}
+              placeholder="Digite o código do cupom"
+              maxLength={20}
+              className={`min-w-0 flex-1 ${classeInput(!!erroCupom)}`}
+            />
+            <button
+              type="submit"
+              disabled={validandoCupom || !codigoCupom.trim()}
+              className="rounded-full bg-brand-pink px-5 py-2 text-sm font-bold text-white transition hover:bg-brand-pink-dark disabled:opacity-50"
+            >
+              {validandoCupom ? "Conferindo..." : "Aplicar"}
+            </button>
+          </form>
+        )}
+
+        {erroCupom && <p className="mt-2 text-sm font-semibold text-brand-pink-dark">{erroCupom}</p>}
+        {cupom && totais.ehAtacado && (
+          <p className="mt-2 text-sm font-semibold text-brand-pink-dark">
+            O desconto de atacado já está aplicado e não acumula com cupom, então o cupom não está
+            valendo neste pedido.
+          </p>
+        )}
+        {cupom && !totais.ehAtacado && abaixoDoMinimo && cupom.pedidoMinimo !== null && (
+          <p className="mt-2 text-sm font-semibold text-brand-pink-dark">
+            Esse cupom vale para pedidos a partir de {formatarMoeda(cupom.pedidoMinimo)} em
+            produtos.
+          </p>
+        )}
+      </div>
+
       <div className="mt-8 space-y-1">
         <div className="flex items-center justify-between text-sm text-foreground/60">
           <span>Subtotal</span>
@@ -425,6 +574,12 @@ export default function CarrinhoPage() {
           <div className="flex items-center justify-between text-sm font-semibold text-brand-green">
             <span>Desconto atacado (20%)</span>
             <span>-{formatarMoeda(totais.valorDesconto)}</span>
+          </div>
+        )}
+        {cupomEmEfeito && descontoCupom > 0 && (
+          <div className="flex items-center justify-between text-sm font-semibold text-brand-green">
+            <span>Cupom {cupomEmEfeito.codigo}</span>
+            <span>-{formatarMoeda(descontoCupom)}</span>
           </div>
         )}
         {freteSelecionado && (

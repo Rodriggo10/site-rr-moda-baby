@@ -59,6 +59,26 @@ export function calcularTotaisCarrinho(itens: ItemParaTotais[]): TotaisCarrinho 
   };
 }
 
+export type TipoCupom = "porcentagem" | "valor";
+
+export interface RegraCupom {
+  tipo: TipoCupom;
+  valor: number;
+}
+
+/** Desconto do cupom sobre o valor dos produtos (nunca passa do próprio valor
+ * dos produtos, e o frete não entra na conta). */
+export function calcularDescontoCupom(cupom: RegraCupom, base: number): number {
+  const bruto = cupom.tipo === "porcentagem" ? (base * cupom.valor) / 100 : cupom.valor;
+  return Math.round(Math.min(bruto, base) * 100) / 100;
+}
+
+export function descreverCupom(cupom: RegraCupom): string {
+  return cupom.tipo === "porcentagem"
+    ? `${cupom.valor.toLocaleString("pt-BR")}% de desconto`
+    : `${formatarMoeda(cupom.valor)} de desconto`;
+}
+
 export function formatarMoeda(valor: number): string {
   return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }

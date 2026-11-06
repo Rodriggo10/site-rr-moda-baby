@@ -15,10 +15,16 @@ export interface FreteEscolhido {
   prazoDias: number;
 }
 
+export interface CupomAplicadoNoPedido {
+  codigo: string;
+  desconto: number;
+}
+
 export function montarMensagemPedido(
   cliente: DadosCliente,
   itens: ItemCarrinho[],
-  frete?: FreteEscolhido | null
+  frete?: FreteEscolhido | null,
+  cupom?: CupomAplicadoNoPedido | null
 ): string {
   const linhas: string[] = [];
 
@@ -49,6 +55,12 @@ export function montarMensagemPedido(
   }
 
   let total = totais.subtotal;
+
+  if (cupom && cupom.desconto > 0) {
+    total -= cupom.desconto;
+    linhas.push("");
+    linhas.push(`Cupom ${cupom.codigo}: -${formatarMoeda(cupom.desconto)}`);
+  }
 
   if (frete) {
     total += frete.preco;

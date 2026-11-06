@@ -13,6 +13,7 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/api/produtos") ||
     pathname.startsWith("/api/upload") ||
     pathname.startsWith("/api/categorias") ||
+    pathname.startsWith("/api/cupons") ||
     pathname.startsWith("/api/banners")
   ) {
     // GET em /api/produtos, /api/categorias e /api/banners é público
@@ -46,6 +47,7 @@ export const config = {
     "/api/produtos/:path*",
     "/api/upload/:path*",
     "/api/categorias/:path*",
+    "/api/cupons/:path*",
     "/api/banners/:path*",
   ],
 };
